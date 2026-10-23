@@ -1,0 +1,47 @@
+permissionset 50210 "CRM_PERMISOS"
+{
+    Assignable = true;
+    Caption = 'Acceso CRM';
+
+    Permissions =
+        tabledata Customer = RIM,
+        table Customer = X,
+        tabledata Contact = RIM,
+        table Contact = X,
+        tabledata Opportunity = RIM,
+        table Opportunity = X,
+        tabledata "Salesperson/Purchaser" = RIM,
+        table "Salesperson/Purchaser" = X,
+        tabledata Item = RIM,
+        table Item = X,
+        tabledata "Sales Header" = RIM,
+        table "Sales Header" = X,
+        tabledata "Sales Line" = RIM,
+        table "Sales Line" = X,
+        tabledata Campaign = RIM,
+        table Campaign = X,
+        tabledata "Segment Header" = RIM,
+        table "Segment Header" = X,
+        tabledata "To-do" = RIM,
+        table "To-do" = X,
+        tabledata "Dimension Value" = RIM,
+        table "Dimension Value" = X,
+        tabledata "Default Dimension" = RIM,
+        table "Default Dimension" = X,
+        tabledata "Unit of Measure" = RIM,
+        table "Unit of Measure" = X,
+        tabledata "Payment Terms" = RIM,
+        table "Payment Terms" = X,
+        tabledata "Shipment Method" = RIM,
+        table "Shipment Method" = X,
+        tabledata Currency = RIM,
+        table Currency = X,
+        tabledata Location = RIM,
+        table Location = X,
+        tabledata "Sales Cycle" = RIM,
+        table "Sales Cycle" = X,
+        tabledata "Sales Cycle Stage" = RIM,
+        table "Sales Cycle Stage" = X,
+        tabledata "EXM Transaction History" = RIM,
+        table "EXM Transaction History" = X;
+}
