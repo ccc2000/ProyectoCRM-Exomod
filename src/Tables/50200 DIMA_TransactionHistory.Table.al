@@ -1,4 +1,4 @@
-table 50200 "EXM Transaction History"
+table 50200 "DIMA Hist. de Transacciones"
 {
     Caption = 'Transaction History';
     DataClassification = CustomerContent;
@@ -89,6 +89,7 @@ table 50200 "EXM Transaction History"
         field(20; "Contract ID"; Code[20])
         {
             Caption = 'Contract ID';
+            TableRelation = "DIMA Contratos CORCs"."Contract ID";
         }
         field(21; "Invoice"; Code[20])
         {

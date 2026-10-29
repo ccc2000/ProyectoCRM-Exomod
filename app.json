@@ -2,7 +2,7 @@
   "id": "327031a4-7227-4e28-bca4-302187be9955",
   "name": "Exomad Green CRM",
   "publisher": "DIMA LTDA",
-  "version": "1.0.0.8",
+  "version": "1.0.0.16",
   "brief": "Módulo CRM para Exomad Green — Business Central",
   "description": "Gestión de oportunidades, inventario de CORCs, contratos y facturación para Exomad Green",
   "privacyStatement": "",
@@ -16,8 +16,8 @@
   "application": "28.0.0.0",
   "idRanges": [
     {
-      "from": 50100,
-      "to": 50300
+      "from": 50200,
+      "to": 50210
     }
   ],
   "resourceExposurePolicy": {

@@ -1,4 +1,4 @@
-permissionset 50210 "CRM_PERMISOS"
+permissionset 50201 "CRM_PERMISOS"
 {
     Assignable = true;
     Caption = 'Acceso CRM';
@@ -42,6 +42,6 @@ permissionset 50210 "CRM_PERMISOS"
         table "Sales Cycle" = X,
         tabledata "Sales Cycle Stage" = RIM,
         table "Sales Cycle Stage" = X,
-        tabledata "EXM Transaction History" = RIM,
-        table "EXM Transaction History" = X;
+        tabledata "DIMA Hist. de Transacciones" = RIM,
+        table "DIMA Hist. de Transacciones" = X;
 }

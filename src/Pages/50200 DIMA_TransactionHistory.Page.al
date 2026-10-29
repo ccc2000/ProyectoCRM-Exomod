@@ -1,8 +1,8 @@
-page 50200 "EXM Transaction History"
+page 50200 "DIMA Hist. de Transacciones"
 {
-    Caption = 'Transaction History';
+    Caption = 'DIMA Historial de Transacciones CORCs';
     PageType = List;
-    SourceTable = "EXM Transaction History";
+    SourceTable = "DIMA Hist. de Transacciones";
     ApplicationArea = All;
     UsageCategory = Lists;
     Editable = true;
@@ -56,7 +56,19 @@ page 50200 "EXM Transaction History"
                 }
                 field("Status"; Rec."Status") { ApplicationArea = All; }
                 field("Payment Status"; Rec."Payment Status") { ApplicationArea = All; }
-                field("Contract ID"; Rec."Contract ID") { ApplicationArea = All; }
+                field("Contract ID"; Rec."Contract ID")
+                {
+                    ApplicationArea = All;
+
+                    trigger OnDrillDown()
+                    var
+                        Contract: Record "DIMA Contratos CORCs";
+                    begin
+                        Contract.SetRange("Contract ID", Rec."Contract ID");
+
+                        Page.Run(Page::"DIMA Contratos CORCs", Contract);
+                    end;
+                }
                 field("Invoice"; Rec."Invoice") { ApplicationArea = All; }
                 field("Type"; Rec."Type") { ApplicationArea = All; }
                 field("Comments"; Rec."Comments") { ApplicationArea = All; }
