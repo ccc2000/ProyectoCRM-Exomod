@@ -1,6 +1,6 @@
 table 50200 "DIMA Hist. de Transacciones"
 {
-    Caption = 'Transaction History';
+    Caption = 'DIMA Historial de Transacciones CORCs';
     DataClassification = CustomerContent;
 
     fields
@@ -17,22 +17,55 @@ table 50200 "DIMA Hist. de Transacciones"
         field(3; "Client Id"; Code[20])
         {
             Caption = 'Client ID';
+            TableRelation = Customer."No.";
+
+            trigger OnValidate()
+            var
+                Customer: Record Customer;
+            begin
+                "Account Holder" := '';
+
+                if "Client Id" = '' then
+                    exit;
+
+                if Customer.Get("Client Id") then
+                    "Account Holder" := Customer.Name;
+            end;
         }
         field(4; "FY"; Integer)
         {
             Caption = 'Fiscal Year';
+            trigger OnValidate()
+            begin
+                if ("FY" < 1000) or ("FY" > 9999) then
+                    Error('Fiscal Year must be a four-digit positive number.');
+            end;
         }
-        field(5; "FY Payment Month"; Text[20])
+        field(5; "FY Payment Month"; Enum "DIMA Payment Months")
         {
             Caption = 'FY Payment Month';
         }
-        field(6; "Facility"; Text[50])
+        field(6; "Facility"; Text[150])
         {
             Caption = 'Facility';
+            Editable = false;
         }
-        field(7; "Facility Id"; Integer)
+        field(7; "Facility Id"; Code[20])
         {
             Caption = 'Facility ID';
+            TableRelation = "Location".Code;
+            trigger OnValidate()
+            var
+                Location: Record "Location";
+            begin
+                "Facility" := '';
+
+                if "Facility Id" = '' then
+                    exit;
+
+                if Location.Get("Facility Id") then
+                    "Facility" := Location.Name;
+            end;
         }
         field(8; "Transaction Date"; Date)
         {
@@ -50,9 +83,45 @@ table 50200 "DIMA Hist. de Transacciones"
         {
             Caption = 'Account Holder';
         }
-        field(12; "Second Broker"; Text[100])
+        field(121; "Second Broker Id"; Code[20])
+        {
+            Caption = 'Second Broker ID';
+            TableRelation = Customer."No.";
+
+            trigger OnValidate()
+            var
+                Customer: Record Customer;
+            begin
+                "Second Broker" := '';
+
+                if "Second Broker Id" = '' then
+                    exit;
+
+                if Customer.Get("Second Broker Id") then
+                    "Second Broker" := Customer.Name;
+            end;
+        }
+        field(12; "Second Broker"; Text[250])
         {
             Caption = 'Second Broker';
+        }
+        field(131; "End Client Id"; Code[20])
+        {
+            Caption = 'End Client ID';
+            TableRelation = Customer."No.";
+
+            trigger OnValidate()
+            var
+                Customer: Record Customer;
+            begin
+                "End Client" := '';
+
+                if "End Client Id" = '' then
+                    exit;
+
+                if Customer.Get("End Client Id") then
+                    "End Client" := Customer.Name;
+            end;
         }
         field(13; "End Client"; Text[100])
         {
@@ -78,11 +147,11 @@ table 50200 "DIMA Hist. de Transacciones"
             Caption = 'Price (USD/CORC)';
             AutoFormatType = 0;
         }
-        field(18; "Status"; Text[30])
+        field(18; "Status"; Enum "DIMA Transaction CORCs Status")
         {
             Caption = 'Status';
         }
-        field(19; "Payment Status"; Text[30])
+        field(19; "Payment Status"; Enum "DIMA Payment Status")
         {
             Caption = 'Payment Status';
         }
@@ -95,7 +164,7 @@ table 50200 "DIMA Hist. de Transacciones"
         {
             Caption = 'Invoice No.';
         }
-        field(22; "Type"; Text[30])
+        field(22; "Type"; Enum "DIMA Transaction Type")
         {
             Caption = 'Type';
         }
@@ -110,6 +179,9 @@ table 50200 "DIMA Hist. de Transacciones"
         key(PK; "Entry No.")
         {
             Clustered = true;
+        }
+        key(ContractID; "Contract ID")
+        {
         }
     }
 }

@@ -2,7 +2,9 @@
 table 50201 "DIMA Contratos CORCs"
 {
     Caption = 'DIMA Contratos CORCs';
-    DataClassification = CustomerContent;
+    DataCaptionFields = "Contract ID", "Account Holder";
+    LookupPageID = "DIMA Contratos CORCs";
+    DrillDownPageID = "DIMA Contratos CORCs";
 
     fields
     {
@@ -11,9 +13,9 @@ table 50201 "DIMA Contratos CORCs"
             Caption = 'Entry No.';
             AutoIncrement = true;
         }
-        field(2; "Client Id"; Code[20])
+        field(2; "End Customer Id"; Code[20])
         {
-            Caption = 'Client ID';
+            Caption = 'End Customer ID';
             TableRelation = Customer."No.";
 
             trigger OnValidate()
@@ -22,19 +24,14 @@ table 50201 "DIMA Contratos CORCs"
             begin
                 "End Customer" := '';
 
-                if "Client Id" = '' then
+                if "End Customer Id" = '' then
                     exit;
 
-                if Customer.Get("Client Id") then
+                if Customer.Get("End Customer Id") then
                     "End Customer" := Customer.Name;
             end;
         }
-        field(3; "Contract ID"; Code[20])
-        {
-            Caption = 'Contract ID';
-            NotBlank = true;
-        }
-        field(4; "Account Holder ID"; Code[20])
+        field(3; "Account Holder ID"; Code[20])
         {
             Caption = 'Account Holder ID';
             TableRelation = Customer."No.";
@@ -52,18 +49,15 @@ table 50201 "DIMA Contratos CORCs"
                     "Account Holder" := Customer.Name;
             end;
         }
+        field(4; "Contract ID"; Code[20])
+        {
+            Caption = 'Contract ID';
+            OptimizeForTextSearch = true;
+            NotBlank = true;
+        }
         field(5; "Account Holder"; Text[100])
         {
             Caption = 'Account Holder';
-
-            trigger OnLookup()
-            var
-                Customer: Record Customer;
-            begin
-                if Page.RunModal(Page::"Customer List", Customer) = Action::LookupOK then begin
-                    Validate("Account Holder ID", Customer."No.");
-                end;
-            end;
         }
         field(6; "End Customer"; Text[100])
         {
@@ -121,13 +115,25 @@ table 50201 "DIMA Contratos CORCs"
         {
             Caption = 'Status';
         }
+        field(17; "Order No."; Code[20])
+        {
+            Caption = 'Order No.';
+            TableRelation = "Sales Header"."No.";
+        }
     }
 
     keys
     {
-        key(PK; "Entry No.")
+        key(PK; "Contract ID")
         {
             Clustered = true;
+            Unique = false;
+        }
+    }
+    fieldgroups
+    {
+        fieldgroup(DropDown; "Contract ID", "Account Holder", "End Customer", "Total Contract Amount", "Status")
+        {
         }
     }
 }

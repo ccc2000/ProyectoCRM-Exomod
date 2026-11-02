@@ -1,4 +1,4 @@
-enum 50205 "DIMA Contract Status"
+enum 50201 "DIMA Contract Status"
 {
     Extensible = true;
     Caption = 'Estado del Contrato';

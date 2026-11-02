@@ -1,5 +1,5 @@
 
-page 50202 "DIMA Contratos CORCs"
+page 50201 "DIMA Contratos CORCs"
 {
     Caption = 'DIMA Contratos CORCs';
     PageType = List;
@@ -19,24 +19,24 @@ page 50202 "DIMA Contratos CORCs"
                     ApplicationArea = All;
                     Visible = false;
                 }
-                field("Client Id"; Rec."Client Id")
+                field("Client Id"; Rec."End Customer ID")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Customer associated with the contract.';
-                }
-                field("Contract ID"; Rec."Contract ID")
-                {
-                    ApplicationArea = All;
                 }
                 field("Account Holder ID"; Rec."Account Holder ID")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Customer acting as broker or account holder.';
-                    Visible = false;
+                }
+                field("Contract ID"; Rec."Contract ID")
+                {
+                    ApplicationArea = All;
                 }
                 field("Account Holder"; Rec."Account Holder")
                 {
                     ApplicationArea = All;
+                    Editable = false;
                 }
                 field("End Customer"; Rec."End Customer")
                 {
@@ -80,6 +80,10 @@ page 50202 "DIMA Contratos CORCs"
                     ApplicationArea = All;
                 }
                 field("Status"; Rec."Status")
+                {
+                    ApplicationArea = All;
+                }
+                field("Order No."; Rec."Order No.")
                 {
                     ApplicationArea = All;
                 }
