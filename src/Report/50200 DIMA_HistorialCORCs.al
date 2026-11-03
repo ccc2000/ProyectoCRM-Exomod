@@ -265,14 +265,132 @@ report 50200 "DIMA Hist. y Contratos CORCs"
     end;
 
 
+    // local procedure LoadSalesShipments()
+    // var
+    //     ShipmentLine: Record "Sales Shipment Line";
+    // begin
+    //     ShipmentLine.SetRange("Order No.", Contract."Order No.");
+
+    //     if ShipmentLine.FindSet() then
+    //         repeat
+    //             ContractDetail.Init();
+
+    //             ContractDetail."Contract Entry No." := Contract."Entry No.";
+    //             ContractDetail."Sort Order" := 2;
+    //             ContractDetail."Source Type" :=
+    //                 ContractDetail."Source Type"::Shipment;
+
+    //             ContractDetail."Entry No." := ShipmentLine."Line No.";
+    //             ContractDetail."Transaction Id" := ShipmentLine."Document No.";
+    //             ContractDetail."Client Id" := ShipmentLine."Bill-to Customer No.";
+
+    //             ContractDetail.Facility := ShipmentLine."Location Code";
+    //             ContractDetail."Facility Id" := ShipmentLine."Location Code";
+
+    //             ContractDetail."Transaction Date" := ShipmentLine."Posting Date";
+
+    //             ContractDetail."Account Holder" :=
+    //                 ShipmentLine."Bill-to Customer No.";
+
+    //             ContractDetail.Volume := ShipmentLine.Quantity;
+    //             ContractDetail."Invoice Amount" :=
+    //                 ShipmentLine."Item Charge Base Amount";
+    //             ContractDetail."Open Balance" :=
+    //                 ShipmentLine."Item Charge Base Amount";
+    //             ContractDetail.Price := ShipmentLine."Unit Price";
+
+    //             ContractDetail.Status := 'Delivered';
+    //             ContractDetail."Contract ID" := ShipmentLine."Order No.";
+    //             ContractDetail.Type := Format('');
+
+    //             ContractDetail."Facility Print" :=
+    //                 GetFacilityName(
+    //                     ShipmentLine."Location Code",
+    //                     ShipmentLine."Location Code");
+
+    //             ContractDetail.Insert();
+    //         until ShipmentLine.Next() = 0;
+    // end;
+
     local procedure LoadSalesShipments()
     var
         ShipmentLine: Record "Sales Shipment Line";
+        SalesInvoiceLine: Record "Sales Invoice Line";
+        CustLedgEntry: Record "Cust. Ledger Entry";
+        ProcessedInvoices: Dictionary of [Text, Boolean];
+        InvoiceNos: Text[250];
+        InvoiceAmount: Decimal;
+        OpenBalance: Decimal;
+        PaymentStatus: Text[30];
+        InvoiceNo: Text;
+        ExpectedPaymentDate: Date;
+        PaymentDate: Date;
     begin
         ShipmentLine.SetRange("Order No.", Contract."Order No.");
 
         if ShipmentLine.FindSet() then
             repeat
+                Clear(ProcessedInvoices);
+                Clear(InvoiceNos);
+                Clear(InvoiceAmount);
+                Clear(OpenBalance);
+
+                // Buscar las facturas asociadas a esta línea de remisión.
+                SalesInvoiceLine.Reset();
+                SalesInvoiceLine.SetRange(
+                    "Shipment No.", ShipmentLine."Document No.");
+                SalesInvoiceLine.SetRange(
+                    "Shipment Line No.", ShipmentLine."Line No.");
+
+                if SalesInvoiceLine.FindSet() then
+                    repeat
+                        InvoiceNo := SalesInvoiceLine."Document No.";
+
+                        // Evitar contabilizar dos veces una misma factura.
+                        if not ProcessedInvoices.ContainsKey(InvoiceNo) then begin
+                            ProcessedInvoices.Add(InvoiceNo, true);
+
+                            // Consultar el movimiento de cliente de la factura.
+                            CustLedgEntry.Reset();
+                            CustLedgEntry.SetRange(
+                                "Document Type",
+                                CustLedgEntry."Document Type"::Invoice);
+                            CustLedgEntry.SetRange(
+                                "Document No.", InvoiceNo);
+
+                            if CustLedgEntry.FindFirst() then begin
+                                CustLedgEntry.CalcFields(
+                                    Amount,
+                                    "Remaining Amount");
+                                InvoiceAmount += CustLedgEntry."Amount";
+                                OpenBalance += CustLedgEntry."Remaining Amount";
+                                ExpectedPaymentDate := CustLedgEntry."Due Date";
+                                PaymentDate := CustLedgEntry."Closed at Date";
+
+                                if InvoiceNos <> '' then
+                                    InvoiceNos += ', ';
+
+                                InvoiceNos += InvoiceNo;
+                            end;
+                        end;
+                    until SalesInvoiceLine.Next() = 0;
+
+                // Determine payment status.
+                if InvoiceNos = '' then
+                    PaymentStatus := ''
+                else
+                    if OpenBalance < 0 then
+                        PaymentStatus := 'Overpaid'
+                    else
+                        if OpenBalance = 0 then
+                            PaymentStatus := 'Paid'
+                        else
+                            if OpenBalance >= InvoiceAmount then
+                                PaymentStatus := 'Pending'
+                            else
+                                PaymentStatus := 'Partial';
+
+                // Insertar la remisión en la tabla temporal.
                 ContractDetail.Init();
 
                 ContractDetail."Contract Entry No." := Contract."Entry No.";
@@ -288,17 +406,21 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 ContractDetail."Facility Id" := ShipmentLine."Location Code";
 
                 ContractDetail."Transaction Date" := ShipmentLine."Posting Date";
+                ContractDetail."Payment Date" := PaymentDate;
+                ContractDetail."Expected Payment Date" :=
+                    ExpectedPaymentDate;
 
                 ContractDetail."Account Holder" :=
                     ShipmentLine."Bill-to Customer No.";
 
                 ContractDetail.Volume := ShipmentLine.Quantity;
-                ContractDetail."Invoice Amount" :=
-                    ShipmentLine."Item Charge Base Amount";
-                ContractDetail."Open Balance" :=
-                    ShipmentLine."Item Charge Base Amount";
-                ContractDetail.Price := ShipmentLine."Unit Price";
 
+                ContractDetail."Invoice Amount" := InvoiceAmount;
+                ContractDetail."Open Balance" := OpenBalance;
+                ContractDetail."Payment Status" := PaymentStatus;
+                ContractDetail.Invoice := InvoiceNos;
+
+                ContractDetail.Price := ShipmentLine."Unit Price";
                 ContractDetail.Status := 'Delivered';
                 ContractDetail."Contract ID" := ShipmentLine."Order No.";
                 ContractDetail.Type := Format('');
@@ -311,5 +433,4 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 ContractDetail.Insert();
             until ShipmentLine.Next() = 0;
     end;
-
 }
