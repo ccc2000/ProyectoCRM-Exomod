@@ -36,7 +36,7 @@ table 50202 "DIMA CORC Report Details"
         {
             Caption = 'FY';
         }
-        field(8; "FY Payment Month"; Text[30])
+        field(8; "FY Payment Month"; Enum "DIMA Payment Months")
         {
             Caption = 'FY Payment Month';
         }
@@ -46,7 +46,20 @@ table 50202 "DIMA CORC Report Details"
         }
         field(10; "Facility Id"; Code[20])
         {
-            Caption = 'Facility Id';
+            Caption = 'Facility ID';
+            TableRelation = "Location".Code;
+            trigger OnValidate()
+            var
+                Location: Record "Location";
+            begin
+                "Facility" := '';
+
+                if "Facility Id" = '' then
+                    exit;
+
+                if Location.Get("Facility Id") then
+                    "Facility" := Location.Name;
+            end;
         }
         field(11; "Transaction Date"; Date)
         {
@@ -88,11 +101,11 @@ table 50202 "DIMA CORC Report Details"
         {
             Caption = 'Price';
         }
-        field(21; Status; Text[30])
+        field(21; Status; Enum "DIMA Transaction CORCs Status")
         {
             Caption = 'Status';
         }
-        field(22; "Payment Status"; Text[30])
+        field(22; "Payment Status"; Enum "DIMA Payment Status")
         {
             Caption = 'Payment Status';
         }

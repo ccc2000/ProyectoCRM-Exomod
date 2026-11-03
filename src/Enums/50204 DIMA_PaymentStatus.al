@@ -19,4 +19,12 @@ enum 50204 "DIMA Payment Status"
     {
         Caption = 'WFD';
     }
+    value(4; Overpaid)
+    {
+        Caption = 'Overpaid';
+    }
+    value(5; Partial)
+    {
+        Caption = 'Partial';
+    }
 }

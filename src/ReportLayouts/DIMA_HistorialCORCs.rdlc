@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-11-03T02:13:44.6083278Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-11-03T12:36:27.0868484Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -609,7 +609,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Volume Contracted</Value>
+                                  <Value EvaluationMode="Constant">Volume Contracted (CORCs)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -650,7 +650,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Price</Value>
+                                  <Value EvaluationMode="Constant">Price (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -691,7 +691,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Total Contract Amount</Value>
+                                  <Value EvaluationMode="Constant">Total Contract Amount (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -732,7 +732,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Open Balance</Value>
+                                  <Value EvaluationMode="Constant">Open Balance (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -1381,7 +1381,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Volume</Value>
+                                  <Value EvaluationMode="Constant">Volume (CORCs)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -1415,7 +1415,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Price</Value>
+                                  <Value EvaluationMode="Constant">Price (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -1449,7 +1449,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Invoice Amount</Value>
+                                  <Value EvaluationMode="Constant">Invoice Amount (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -1539,6 +1539,7 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <rd:Selected>true</rd:Selected>
                         <Textbox Name="Textbox152">
                           <rd:DefaultName>Textbox152</rd:DefaultName>
                           <CanGrow>true</CanGrow>
@@ -1547,7 +1548,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Open Balance</Value>
+                                  <Value EvaluationMode="Constant">Open Balance (USD)</Value>
                                   <Style>
                                     <FontFamily>Segoe UI</FontFamily>
                                     <FontSize>5pt</FontSize>
@@ -2789,7 +2790,7 @@
       <Width>19.59cm</Width>
       <Page>
         <PageHeader>
-          <Height>1.81432cm</Height>
+          <Height>1.79689cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
@@ -2828,33 +2829,34 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox1">
-              <rd:DefaultName>Textbox1</rd:DefaultName>
+            <Textbox Name="Filtros">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value />
-                      <Style />
+                      <Value>=Fields!ContractFilter__TABLECAPTION__________ContractFilter.Value</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>5pt</FontSize>
+                      </Style>
                     </TextRun>
                   </TextRuns>
                   <Style />
                 </Paragraph>
               </Paragraphs>
-              <Top>1.59091cm</Top>
-              <Height>0.17667cm</Height>
+              <Top>1.34396cm</Top>
+              <Height>0.2cm</Height>
               <Width>19.59cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
+                <VerticalAlign>Top</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
             <Image Name="Image2">
@@ -2880,7 +2882,7 @@
                       <Value>=User!UserID</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2890,9 +2892,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.8cm</Top>
-              <Left>13.99691cm</Left>
+              <Left>14.71071cm</Left>
               <Height>0.4cm</Height>
-              <Width>5.59309cm</Width>
+              <Width>4.87929cm</Width>
               <ZIndex>3</ZIndex>
               <Style>
                 <Border>
@@ -2912,7 +2914,7 @@
                       <Value>="Pág." &amp; " " &amp; Globals!PageNumber &amp; " / " &amp; Globals!TotalPages</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -2922,9 +2924,9 @@
                 </Paragraph>
               </Paragraphs>
               <Top>0.4cm</Top>
-              <Left>13.99691cm</Left>
+              <Left>14.71071cm</Left>
               <Height>0.4cm</Height>
-              <Width>5.59309cm</Width>
+              <Width>4.87929cm</Width>
               <ZIndex>4</ZIndex>
               <Style>
                 <Border>
@@ -2944,7 +2946,7 @@
                       <Value>=Globals!ExecutionTime</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
-                        <FontSize>8pt</FontSize>
+                        <FontSize>7pt</FontSize>
                         <Format>D</Format>
                       </Style>
                     </TextRun>
@@ -2954,9 +2956,9 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>13.99691cm</Left>
+              <Left>14.71071cm</Left>
               <Height>0.4cm</Height>
-              <Width>5.59309cm</Width>
+              <Width>4.87929cm</Width>
               <ZIndex>5</ZIndex>
               <Style>
                 <Border>
@@ -2986,9 +2988,9 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Top>1.01452cm</Top>
+              <Top>0.94396cm</Top>
               <Height>0.4cm</Height>
-              <Width>13.57142cm</Width>
+              <Width>8.65557cm</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border>
@@ -2998,18 +3000,18 @@
                 <PaddingRight>2pt</PaddingRight>
               </Style>
             </Textbox>
-            <Textbox Name="Textbox17">
-              <rd:DefaultName>Textbox17</rd:DefaultName>
+            <Textbox Name="Moneda">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Importes en USD</Value>
+                      <Value>(Importes en USD)</Value>
                       <Style>
+                        <FontStyle>Italic</FontStyle>
                         <FontFamily>Segoe UI</FontFamily>
-                        <FontSize>7pt</FontSize>
+                        <FontSize>6pt</FontSize>
                       </Style>
                     </TextRun>
                   </TextRuns>
@@ -3018,16 +3020,46 @@
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Top>0.9cm</Top>
+              <Top>0.94396cm</Top>
               <Left>8.65557cm</Left>
-              <Height>0.29083cm</Height>
+              <Height>0.24687cm</Height>
               <Width>2.27887cm</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <VerticalAlign>Middle</VerticalAlign>
+                <VerticalAlign>Top</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+              </Style>
+            </Textbox>
+            <Textbox Name="Filtros2">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Fields!th_ContractDetailFilter__TABLECAPTION__________ContractDetailFilter.Value</Value>
+                      <Style>
+                        <FontFamily>Segoe UI</FontFamily>
+                        <FontSize>5pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <Top>1.54397cm</Top>
+              <Height>0.2cm</Height>
+              <Width>19.59cm</Width>
+              <ZIndex>8</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Top</VerticalAlign>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
               </Style>
@@ -9933,6 +9965,12 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         <Field Name="COMPANYNAME">
           <DataField>COMPANYNAME</DataField>
         </Field>
+        <Field Name="ContractFilter__TABLECAPTION__________ContractFilter">
+          <DataField>ContractFilter__TABLECAPTION__________ContractFilter</DataField>
+        </Field>
+        <Field Name="ContractFilter">
+          <DataField>ContractFilter</DataField>
+        </Field>
         <Field Name="ContractEntryNo">
           <DataField>ContractEntryNo</DataField>
         </Field>
@@ -9995,6 +10033,12 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         </Field>
         <Field Name="ContractStatus">
           <DataField>ContractStatus</DataField>
+        </Field>
+        <Field Name="th_ContractDetailFilter__TABLECAPTION__________ContractDetailFilter">
+          <DataField>th_ContractDetailFilter__TABLECAPTION__________ContractDetailFilter</DataField>
+        </Field>
+        <Field Name="th_ContractDetailFilter">
+          <DataField>th_ContractDetailFilter</DataField>
         </Field>
         <Field Name="th_Entry_No">
           <DataField>th_Entry_No</DataField>

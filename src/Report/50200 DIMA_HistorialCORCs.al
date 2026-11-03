@@ -15,6 +15,8 @@ report 50200 "DIMA Hist. y Contratos CORCs"
             RequestFilterFields = "Contract ID", "Account Holder ID", "End Customer ID",
                                   "Status", "Type";
             column(COMPANYNAME; COMPANYPROPERTY.DisplayName()) { }
+            column(ContractFilter__TABLECAPTION__________ContractFilter; 'Filtro(s) en Cabecera' + ': ' + ContractFilter) { }
+            column(ContractFilter; ContractFilter) { }
             column(ContractEntryNo; "Entry No.") { }
             column(ContractID; "Contract ID") { }
             column(ClientId; "End Customer Id") { }
@@ -31,75 +33,6 @@ report 50200 "DIMA Hist. y Contratos CORCs"
             column(ContractType; Type) { }
             column(ContractStatus; Status) { }
 
-            // dataitem(TransactionHistory; "DIMA Hist. de Transacciones")
-            // {
-            //     DataItemLinkReference = Contract;
-            //     DataItemLink = "Contract ID" = field("Contract ID");
-
-            //     RequestFilterFields = "Transaction Date",
-            //               "Payment Date",
-            //               "Payment Status";
-
-            //     column(th_Entry_No; "Entry No.") { }
-            //     column(th_Transaction_Id; "Transaction Id") { }
-            //     column(th_Client_Id; "Client Id") { }
-            //     column(th_FY; FY) { }
-            //     column(th_FY_Payment_Month; "FY Payment Month") { }
-            //     column(th_Facility; Facility) { }
-            //     column(th_Facility_Id; "Facility Id") { }
-            //     column(th_Transaction_Date; "Transaction Date") { }
-            //     column(th_Payment_Date; "Payment Date") { }
-            //     column(th_Expected_Payment_Date; "Expected Payment Date") { }
-            //     column(th_Account_Holder; "Account Holder") { }
-            //     column(th_Second_Broker; "Second Broker") { }
-            //     column(th_End_Client; "End Client") { }
-            //     column(th_Volume; Volume) { }
-            //     column(th_Invoice_Amount; "Invoice Amount") { }
-            //     column(th_Open_Balance; "Open Balance") { }
-            //     column(th_Price; Price) { }
-            //     column(th_Status; Status) { }
-            //     column(th_Payment_Status; "Payment Status") { }
-            //     column(th_Contract_ID; "Contract ID") { }
-            //     column(th_Invoice; Invoice) { }
-            //     column(th_Type; Type) { }
-            //     column(th_Comments; Comments) { }
-            //     column(th_Facility_Print; GetFacilityName("Facility Id", "Facility Id"))
-            //     {
-            //     }
-            // }
-            // dataitem(RemisionesVenta; "Sales Shipment Line")
-            // {
-            //     DataItemLinkReference = Contract;
-            //     DataItemLink = "Order No." = field("Order No.");
-
-            //     RequestFilterFields = "Shipment Date",
-            //               "Location Code";
-            //     column(so_Entry_No; "Line No.") { }
-            //     column(so_Transaction_Id; "Document No.") { }
-            //     column(so_Client_Id; "Bill-to Customer No.") { }
-            //     column(so_FY; '') { }
-            //     column(so_FY_Payment_Month; '') { }
-            //     column(so_Facility; "Location Code") { }
-            //     column(so_Facility_Id; "Location Code") { }
-            //     column(so_Transaction_Date; "Posting Date") { }
-            //     column(so_Payment_Date; '') { }
-            //     column(so_Expected_Payment_Date; '') { }
-            //     column(so_Account_Holder; "Bill-to Customer No.") { }
-            //     column(so_Second_Broker; '') { }
-            //     column(so_End_Client; '') { }
-            //     column(so_Volume; Quantity) { }
-            //     column(so_Invoice_Amount; "Item Charge Base Amount") { }
-            //     column(so_Open_Balance; "Item Charge Base Amount") { }
-            //     column(so_Price; "Unit Price") { }
-            //     column(so_Status; 'Delivered') { }
-            //     column(so_Payment_Status; '') { }
-            //     column(so_Contract_ID; "Order No.") { }
-            //     column(so_Invoice; '') { }
-            //     column(so_Type; Type) { }
-            //     column(so_Comments; '') { }
-            //     column(so_Facility_Print; GetFacilityName("Location Code", "Location Code")) { }
-            // }
-
             dataitem(ContractDetail; "DIMA CORC Report Details")
             {
                 UseTemporary = true;
@@ -113,10 +46,13 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 DataItemLink = "Contract Entry No." = field("Entry No.");
 
                 RequestFilterFields = "Transaction Date",
-                          "Payment Date",
+                          "Status",
                           "Payment Status",
-                          "Facility Id";
+                          "Facility Id",
+                          "FY Payment Month";
 
+                column(th_ContractDetailFilter__TABLECAPTION__________ContractDetailFilter; 'Filtro(s) en Detalle' + ': ' + ContractDetailFilter) { }
+                column(th_ContractDetailFilter; ContractDetailFilter) { }
                 column(th_Entry_No; "Entry No.") { }
                 column(th_Transaction_Id; "Transaction Id") { }
                 column(th_Client_Id; "Client Id") { }
@@ -184,8 +120,16 @@ report 50200 "DIMA Hist. y Contratos CORCs"
         }
     }
 
+    trigger OnPreReport()
+    begin
+        ContractFilter := Contract.GetFilters();
+        ContractDetailFilter := ContractDetail.GetFilters();
+    end;
+
     var
         ShowFacilityName: Boolean;
+        ContractFilter: Text;
+        ContractDetailFilter: Text;
 
     local procedure GetFacilityName(FacilityId: Code[20]; OriginalFacility: Text[100]): Text[100]
     begin
@@ -226,9 +170,7 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 ContractDetail."Transaction Id" := History."Transaction Id";
                 ContractDetail."Client Id" := History."Client Id";
                 ContractDetail.FY := Format(History.FY);
-                ContractDetail."FY Payment Month" :=
-                    Format(History."FY Payment Month");
-
+                ContractDetail."FY Payment Month" := History."FY Payment Month";
                 ContractDetail.Facility := History.Facility;
                 ContractDetail."Facility Id" := History."Facility Id";
 
@@ -246,9 +188,8 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 ContractDetail."Open Balance" := History."Open Balance";
                 ContractDetail.Price := History.Price;
 
-                ContractDetail.Status := Format(History.Status);
-                ContractDetail."Payment Status" :=
-                    Format(History."Payment Status");
+                ContractDetail.Status := History.Status;
+                ContractDetail."Payment Status" := History."Payment Status";
 
                 ContractDetail."Contract ID" := History."Contract ID";
                 ContractDetail.Invoice := History.Invoice;
@@ -264,54 +205,6 @@ report 50200 "DIMA Hist. y Contratos CORCs"
             until History.Next() = 0;
     end;
 
-
-    // local procedure LoadSalesShipments()
-    // var
-    //     ShipmentLine: Record "Sales Shipment Line";
-    // begin
-    //     ShipmentLine.SetRange("Order No.", Contract."Order No.");
-
-    //     if ShipmentLine.FindSet() then
-    //         repeat
-    //             ContractDetail.Init();
-
-    //             ContractDetail."Contract Entry No." := Contract."Entry No.";
-    //             ContractDetail."Sort Order" := 2;
-    //             ContractDetail."Source Type" :=
-    //                 ContractDetail."Source Type"::Shipment;
-
-    //             ContractDetail."Entry No." := ShipmentLine."Line No.";
-    //             ContractDetail."Transaction Id" := ShipmentLine."Document No.";
-    //             ContractDetail."Client Id" := ShipmentLine."Bill-to Customer No.";
-
-    //             ContractDetail.Facility := ShipmentLine."Location Code";
-    //             ContractDetail."Facility Id" := ShipmentLine."Location Code";
-
-    //             ContractDetail."Transaction Date" := ShipmentLine."Posting Date";
-
-    //             ContractDetail."Account Holder" :=
-    //                 ShipmentLine."Bill-to Customer No.";
-
-    //             ContractDetail.Volume := ShipmentLine.Quantity;
-    //             ContractDetail."Invoice Amount" :=
-    //                 ShipmentLine."Item Charge Base Amount";
-    //             ContractDetail."Open Balance" :=
-    //                 ShipmentLine."Item Charge Base Amount";
-    //             ContractDetail.Price := ShipmentLine."Unit Price";
-
-    //             ContractDetail.Status := 'Delivered';
-    //             ContractDetail."Contract ID" := ShipmentLine."Order No.";
-    //             ContractDetail.Type := Format('');
-
-    //             ContractDetail."Facility Print" :=
-    //                 GetFacilityName(
-    //                     ShipmentLine."Location Code",
-    //                     ShipmentLine."Location Code");
-
-    //             ContractDetail.Insert();
-    //         until ShipmentLine.Next() = 0;
-    // end;
-
     local procedure LoadSalesShipments()
     var
         ShipmentLine: Record "Sales Shipment Line";
@@ -321,7 +214,7 @@ report 50200 "DIMA Hist. y Contratos CORCs"
         InvoiceNos: Text[250];
         InvoiceAmount: Decimal;
         OpenBalance: Decimal;
-        PaymentStatus: Text[30];
+        PaymentStatus: Enum "DIMA Payment Status";
         InvoiceNo: Text;
         ExpectedPaymentDate: Date;
         PaymentDate: Date;
@@ -377,18 +270,18 @@ report 50200 "DIMA Hist. y Contratos CORCs"
 
                 // Determine payment status.
                 if InvoiceNos = '' then
-                    PaymentStatus := ''
+                    PaymentStatus := ContractDetail."Payment Status"::" "
                 else
                     if OpenBalance < 0 then
-                        PaymentStatus := 'Overpaid'
+                        PaymentStatus := ContractDetail."Payment Status"::Overpaid
                     else
                         if OpenBalance = 0 then
-                            PaymentStatus := 'Paid'
+                            PaymentStatus := ContractDetail."Payment Status"::Paid
                         else
                             if OpenBalance >= InvoiceAmount then
-                                PaymentStatus := 'Pending'
+                                PaymentStatus := ContractDetail."Payment Status"::Pending
                             else
-                                PaymentStatus := 'Partial';
+                                PaymentStatus := ContractDetail."Payment Status"::Partial;
 
                 // Insertar la remisión en la tabla temporal.
                 ContractDetail.Init();
@@ -407,6 +300,10 @@ report 50200 "DIMA Hist. y Contratos CORCs"
 
                 ContractDetail."Transaction Date" := ShipmentLine."Posting Date";
                 ContractDetail."Payment Date" := PaymentDate;
+
+                if PaymentDate <> 0D then
+                    ContractDetail."FY Payment Month" := Enum::"DIMA Payment Months".FromInteger(Date2DMY(PaymentDate, 2));
+
                 ContractDetail."Expected Payment Date" :=
                     ExpectedPaymentDate;
 
@@ -421,7 +318,7 @@ report 50200 "DIMA Hist. y Contratos CORCs"
                 ContractDetail.Invoice := InvoiceNos;
 
                 ContractDetail.Price := ShipmentLine."Unit Price";
-                ContractDetail.Status := 'Delivered';
+                ContractDetail.Status := ContractDetail.Status::Delivered;
                 ContractDetail."Contract ID" := ShipmentLine."Order No.";
                 ContractDetail.Type := Format('');
 
